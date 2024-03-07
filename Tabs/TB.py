@@ -5,7 +5,6 @@ import random
 import imagerec
 import streamlit.components.v1 as components
 from keras.models import load_model
-import cv2
 from PIL import Image
 import matplotlib.pyplot as plt
 from tensorflow.keras import preprocessing
