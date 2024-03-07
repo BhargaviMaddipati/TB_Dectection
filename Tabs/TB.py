@@ -1,8 +1,18 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
 import random
 import imagerec
 import streamlit.components.v1 as components
+from keras.models import load_model
+import cv2
+from PIL import Image
+import matplotlib.pyplot as plt
+from tensorflow.keras import preprocessing
+import time
+import tensorflow
+from tensorflow.keras.utils import load_img
+from tensorflow.keras.utils import img_to_array
 
 def app():
     components.html(
@@ -50,72 +60,28 @@ def app():
     else:
         st.info("Please upload an image to test")
     x = st.sidebar.button("Detect Tuberculosis")
+    if uploaded_file is not None:    
+        image1 = Image.open(uploaded_file)
+
+    img_height , img_width = 150,150
     if x:
-        with st.spinner("Predicting..."):
-            y,conf = imagerec.imagerecognise(uploaded_file,"Models/tuberculosis_model.h5","Models/tb_labels.txt")
-
-        if y.strip() == "Normal":
-            st.sidebar.success("Accuracy : " + str(x) + " %")
-            components.html(
-                """
-                <style>
-                h1{
-                    
-                    background: -webkit-linear-gradient(0.25turn,#01CCF7, #8BF5F5);
-                    -webkit-background-clip: text;
-                    -webkit-text-fill-color: transparent;
-                    font-family: "Source Sans Pro", sans-serif;
-                }
-                </style>
-                <h1>It is Normal</h1>
-                """
-            )
+        if uploaded_file is None:
+            st.write("Invalid command, please upload an image")
         else:
-            
-            x = random.randint(98,99)+ random.randint(0,99)*0.01
+            img = load_img(uploaded_file,target_size=(img_height,img_width))
+            img_array = img_to_array(img)
+            img_array = np.expand_dims(img_array,axis=0)
+            img_array /= 255.
+            classifier_model = "Tuberculosis_new.h5"
+            model = load_model(classifier_model)
+            prediction = model.predict(img_array)
+            score = np.load('model_acc_new.npy')
+            if prediction[0][0] > 0.5:
+                st.warning("Tuberculosis Detected")
+                st.info(str(score*100)+ "% Confidence Level")
+            else:
+                st.warning("Normal Case")
+                st.info(str(score*100)+ "% Confidence Level")
     
-            st.sidebar.warning("Accuracy : " + str(x) + " %")
-            st.sidebar.info("Please look for more info below the image")
-    
-            components.html(
-                """
-                <style>
-                h1{
-                    background: -webkit-linear-gradient(0.25turn,#FF4C4B, #F70000);
-                    -webkit-background-clip: text;
-                    -webkit-text-fill-color: transparent;
-                    font-family: "Source Sans Pro", sans-serif;
-                }
-                </style>
-                <h1>Tuberculosis Detected</h1>
-                """
-            )
-            st.info("Causes")
-            components.html('''
-                            <style>body{font-family: "Source Sans Pro", sans-serif;}</style>
-                Tuberculosis (TB) is caused by bacteria. It can spread through close contact with people who have TB and have symptoms (active TB). When someone with active TB coughs, they release small droplets containing the bacteria. You can catch TB if you regularly breathe in these droplets over a long period of time. Some people have TB in their body but do not get ill or have any symptoms (latent TB). This type of TB cannot be spread to others, but it can turn into active TB in the future.
-
-            ''')
-
-            st.info("Symptoms")
-            components.html('''
-                            <style>body{font-family: "Source Sans Pro", sans-serif;}</style>
-                <ol>
-                    <li>Cough that lasts more than 3 weeks</li>
-                    <li>Patient might cough up mucus (phlegm) or mucus with blood in it</li>
-                    <li>Feeling tired or exhausted</li>
-                    <li>Loss of appetite</li>
-                    <li>Swollen glands</li>
-                    <li>Constipation</li>
-                </ol>
-
-            ''')
-
-            st.success("Remedies")
-            components.html('''
-                            <style>body{font-family: "Source Sans Pro", sans-serif;}</style>
-                                The main treatment for tuberculosis (TB) is to take antibiotics for at least 6 months. If TB has spread to your brain, spinal cord or the area around your heart, you may also need to take steroid medicine for a few weeks. If you have TB but do not have symptoms (latent TB) you usually need to take antibiotics for 3 to 6 months.
-                            ''')
-
             
 

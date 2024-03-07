@@ -43,18 +43,6 @@ def app(df, X, y):
     Smoking_History = st.slider("Smoking_History", int(df["Smoking_History"].min()), int(df["Smoking_History"].max()))
     Alcohol_Use = st.slider("Alcohol_Use", int(df["Alcohol_Use"].min()), int(df["Alcohol_Use"].max()))
 
-    
-
-    # gender = st.slider("gender", int(df["gender"].min()), int(df["gender"].max()))
-    # smoking = st.slider("smoking", int(df["smoking"].min()), int(df["smoking"].max()))
-    # Diabetes = st.slider("Diabetes", int(df["Diabetes"].min()), int(df["Diabetes"].max()))
-    # muscular = st.slider("muscular", float(df["muscular"].min()), float(df["muscular"].max()))
-    # hypertension = st.slider("hypertension", float(df["hypertension"].min()), float(df["hypertension"].max()))
-    # AtrialFib = st.slider("AtrialFib", float(df["AtrialFib"].min()), float(df["AtrialFib"].max()))
-    
-    # IHD = st.slider("IHD", float(df["IHD"].min()), float(df["IHD"].max()))
-    
-
     # Create a list to store all the features
     features = [Rpm,Age,Gender,Weight,BMI,Cough,Dyspnea,Fever,Weight_Loss,Chest_Pain,Hemoptysis,Exposure_to_TB,Diabetes,HIV_Status,Smoking_History,Alcohol_Use]
 

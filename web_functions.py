@@ -13,7 +13,7 @@ def load_data():
     """This function returns the preprocessed data"""
 
     # Load the Diabetes dataset into DataFrame.
-    df = pd.read_csv('C:/Users/maddi/Downloads/TB_detection_10/tuberculosis_dataset.csv')
+    df = pd.read_csv('tuberculosis_dataset.csv')
 
     #data preprocessing
     df['Gender'] = LabelEncoder().fit_transform(df['Gender'])
